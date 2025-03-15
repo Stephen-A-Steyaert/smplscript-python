@@ -2,7 +2,7 @@ from smplscript import run
 
 def main():
     text = input('smplscript > ')
-    result, error = run(text)
+    result, error = run('<stdin>', text)
     print(error.as_string() if error else result)
 
 

@@ -1,15 +1,16 @@
 from . import constants
-from .token import Token
 from .errors import IllegalCharError
+from .position import Position
+from .token import Token
 
 # Lexer object will be use to tokenize input code.
 class Lexer:
     # Constructor
     # Initializes the text field to the input text, sents the current positiion to 
     # -1, advances to the next character in the text
-    def __init__(self, text: str) -> None:
+    def __init__(self, file_name:str, text: str) -> None:
         self.text = text
-        self.pos = -1
+        self.pos = Position(-1, -1, 0, file_name, text)
         self.current_char = None
         self.advance()
     
@@ -18,8 +19,8 @@ class Lexer:
     # length of the text, if it is, sets the current character to the character at the 
     # current position in the text
     def advance(self) -> None:
-        self.pos += 1
-        self.current_char = self.text[self.pos] if self.pos < len(self.text) else None
+        self.pos.advance()
+        self.current_char = self.text[self.pos.index] if self.pos.index < len(self.text) else None
     
     # make_number() function:
     # Creates a number from the current character in the text, advances to the next 
@@ -72,8 +73,9 @@ class Lexer:
                 tokens.append(Token(constants.TT_RPAREN))
                 self.advance()
             else:
+                pos_start = self.pos.copy()
                 char = self.current_char
                 self.advance()
-                return [], IllegalCharError(f"'{char}'")
+                return [], IllegalCharError(pos_start, self.pos, f"'{char}'")
 
         return tokens, None
