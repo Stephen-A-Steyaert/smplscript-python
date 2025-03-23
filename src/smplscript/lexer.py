@@ -46,7 +46,7 @@ class Lexer:
     # generate_tokens() function:
     # Generates tokens from the text, returns a vector of tokens or an error if an 
     # illegal character is found
-    def generate_tokens(self) -> tuple[list[Token], IllegalCharError|None]:
+    def generate_tokens(self) -> list[Token] | None:
         tokens:list[Token] = []
 
         while self.current_char != None:
@@ -76,6 +76,7 @@ class Lexer:
                 pos_start = self.pos.copy()
                 char = self.current_char
                 self.advance()
-                return [], IllegalCharError(pos_start, self.pos, f"'{char}'")
+                raise IllegalCharError(pos_start, self.pos, f"'{char}'")
 
-        return tokens, None
+        return tokens
+    
